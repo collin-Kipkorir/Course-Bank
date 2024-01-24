@@ -1,0 +1,40 @@
+<!-- res/layout/item_course.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="6dp"
+    android:layout_margin="5dp"
+    android:elevation="8dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="250dp"
+        android:layout_height="170dp">
+
+        <ImageView
+            android:id="@+id/courseImageView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/placeholder_image"
+            android:scaleType="centerCrop"/>
+
+        <TextView
+            android:id="@+id/courseNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:background="#59000000"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:textColor="@color/white"
+            android:shadowColor="@color/black"
+            android:gravity="center_horizontal"
+            android:outlineSpotShadowColor="@color/black"
+            android:padding="8dp"
+            android:layout_alignParentBottom="true"/>
+
+        <!-- Add other TextViews for course description, etc. -->
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

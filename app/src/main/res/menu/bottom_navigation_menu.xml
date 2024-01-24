@@ -1,0 +1,17 @@
+<!-- res/menu/bottom_navigation_menu.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_home"
+        android:title="Home"
+        android:icon="@drawable/ic_home" />
+
+    <item
+        android:id="@+id/action_account"
+        android:title="Challenges"
+        android:icon="@drawable/challenge" />
+
+    <item
+        android:id="@+id/action_notifications"
+        android:title="Account"
+        android:icon="@drawable/ic_account" />
+</menu>

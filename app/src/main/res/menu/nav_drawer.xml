@@ -1,0 +1,29 @@
+<!-- res/layout/nav_drawer.xml -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_item1"
+            android:icon="@drawable/app"
+            android:title="About App" />
+        <item
+            android:id="@+id/nav_item2"
+            android:icon="@drawable/about"
+            android:title="About us" />
+        <item
+            android:id="@+id/nav_item3"
+            android:icon="@drawable/rate"
+            android:title="Rate App" />
+        <item
+            android:id="@+id/nav_item4"
+            android:icon="@drawable/feedback"
+            android:title="Feedback" />
+        <item
+            android:id="@+id/nav_item5"
+            android:icon="@drawable/privacy"
+            android:title="Terms &amp; Privacy Policy" />
+        <item
+            android:id="@+id/nav_item6"
+            android:icon="@drawable/share"
+            android:title="Share App" />
+    </group>
+</menu>

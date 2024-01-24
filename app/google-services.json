@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "573796918996",
+    "project_id": "courses-86fbd",
+    "storage_bucket": "courses-86fbd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:573796918996:android:72a97bd83473d9c99dbd41",
+        "android_client_info": {
+          "package_name": "com.ai.courses.coursesbank"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsj-JsYLP1zj6_3ceDHjxGfUbh7ZvC6xY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
