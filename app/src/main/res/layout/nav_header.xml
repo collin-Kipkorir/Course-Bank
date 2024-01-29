@@ -5,11 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true"
-    android:background="@color/primary">
+    android:background="@color/white">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:background="@color/white"
     app:layout_constraintTop_toTopOf="parent">
     <ImageView
         android:layout_width="100dp"
@@ -20,11 +21,13 @@
         android:id="@+id/header_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp"
-        android:drawablePadding="12dp"
+        android:layout_margin="5dp"
+        android:drawablePadding="5dp"
         android:gravity="center_vertical"
-        android:textColor="@color/white"
-        android:text="@string/app_name"
+        android:textColor="@color/primary"
+        android:textStyle="italic"
+        android:fontFamily="cursive"
+        android:text="@string/tagline"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
         />
 </LinearLayout>

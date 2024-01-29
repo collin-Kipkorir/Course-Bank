@@ -1,11 +1,13 @@
 package com.ai.courses.coursesbank;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,15 +30,12 @@ import java.util.Comparator;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements CourseAdapter.OnItemClickListener {
-    private View view;
     private SliderView sliderView;
     private ImageSliderAdapter imageSliderAdapter;
     private List<SliderImage> sliderImageList;
     private DatabaseReference databaseReference;
 
-    private RecyclerView recyclerView;
-    private CourseAdapter adapter;
-    private List<Course> courseList;
+    private LinearLayout dynamicCategoriesLayout;
 
 
     public HomeFragment() {
@@ -49,104 +48,19 @@ public class HomeFragment extends Fragment implements CourseAdapter.OnItemClickL
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // Initialize dynamicCategoriesLayout
+        dynamicCategoriesLayout = view.findViewById(R.id.dynamicCategoriesLayout);
+
         // Initialize overall RecyclerView and Adapter
-        recyclerView = view.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        courseList = new ArrayList<>();
-        adapter = new CourseAdapter(courseList);
+        List<Course> courseList = new ArrayList<>();
+        CourseAdapter adapter = new CourseAdapter(courseList);
         adapter.setOnItemClickListener(this);
         recyclerView.setAdapter(adapter);
 
-        // Initialize Firebase for overall courses
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference = firebaseDatabase.getReference("courses");
-
-        // Attach a listener to retrieve data for overall courses
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                courseList.clear();
-
-                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-                    for (DataSnapshot courseSnapshot : categorySnapshot.getChildren()) {
-                        Course course = courseSnapshot.getValue(Course.class);
-                        courseList.add(course);
-                    }
-                }
-
-                adapter.notifyDataSetChanged();
-                Log.d("Firebase", "Number of courses: " + courseList.size());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
-
-        // Initialize RecyclerView and Adapter for the first category
-        RecyclerView recyclerViewCategory1 = view.findViewById(R.id.recyclerView2);
-        recyclerViewCategory1.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        List<Course> courseListCategory1 = new ArrayList<>();
-        CourseAdapter adapterCategory1 = new CourseAdapter(courseListCategory1);
-        adapterCategory1.setOnItemClickListener(this);
-        recyclerViewCategory1.setAdapter(adapterCategory1);
-
-        // Initialize Firebase for the first category
-        FirebaseDatabase firebaseDatabaseCategory1 = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReferenceCategory1 = firebaseDatabaseCategory1.getReference("courses").child("category1");
-
-        // Attach a listener to retrieve data for the first category
-        databaseReferenceCategory1.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                courseListCategory1.clear();
-
-                for (DataSnapshot courseSnapshot : dataSnapshot.getChildren()) {
-                    Course course = courseSnapshot.getValue(Course.class);
-                    courseListCategory1.add(course);
-                }
-
-                adapterCategory1.notifyDataSetChanged();
-                Log.d("Firebase", "Number of courses in category1: " + courseListCategory1.size());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
-
-        // Repeat the above code for the second category
-        RecyclerView recyclerViewCategory2 = view.findViewById(R.id.recyclerView3);
-        recyclerViewCategory2.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        List<Course> courseListCategory2 = new ArrayList<>();
-        CourseAdapter adapterCategory2 = new CourseAdapter(courseListCategory2);
-        adapterCategory2.setOnItemClickListener(this);
-        recyclerViewCategory2.setAdapter(adapterCategory2);
-
-        FirebaseDatabase firebaseDatabaseCategory2 = FirebaseDatabase.getInstance();
-        DatabaseReference databaseReferenceCategory2 = firebaseDatabaseCategory2.getReference("courses").child("category3");
-
-        databaseReferenceCategory2.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                courseListCategory2.clear();
-
-                for (DataSnapshot courseSnapshot : dataSnapshot.getChildren()) {
-                    Course course = courseSnapshot.getValue(Course.class);
-                    courseListCategory2.add(course);
-                }
-
-                adapterCategory2.notifyDataSetChanged();
-                Log.d("Firebase", "Number of courses in category2: " + courseListCategory2.size());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
-            }
-        });
+        // Fetch categories and dynamically create RecyclerViews
+        fetchCategoriesAndCreateRecyclerViews();
 
 
         sliderView = view.findViewById(R.id.sliderView);
@@ -165,39 +79,69 @@ public class HomeFragment extends Fragment implements CourseAdapter.OnItemClickL
 
         // Fetch slider images from Firebase
         fetchSliderImages();
-        DatabaseReference categoriesRef = FirebaseDatabase.getInstance().getReference("textsviews");
 
-// Assuming you have a TextView with ID "course_category" in your layout
-        TextView categoryTextView1 = view.findViewById(R.id.course_category1);
-        TextView categoryTextView2 = view.findViewById(R.id.course_category2);
-        TextView categoryTextView3 = view.findViewById(R.id.course_category3);
 
-        categoriesRef.addValueEventListener(new ValueEventListener() {
+        return view;
+    }
+
+    private void fetchCategoriesAndCreateRecyclerViews() {
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference categoriesReference = firebaseDatabase.getReference("courses");
+
+        categoriesReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Clear existing text
-                categoryTextView1.setText("");
-                categoryTextView2.setText("");
-                categoryTextView3.setText("");
+                dynamicCategoriesLayout.removeAllViews(); // Clear existing views
 
-                // Loop through the children of "textsviews"
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
-                    String categoryKey = categorySnapshot.getKey();
-                    String categoryText = categorySnapshot.child("categories").getValue(String.class);
+                    String categoryName = categorySnapshot.getKey();
+                    if (categoryName != null) {
+                        // Create TextView for category
+                        TextView categoryTextView = new TextView(getContext());
+                        categoryTextView.setText(categoryName);
+                        categoryTextView.setTypeface(null, Typeface.BOLD);
+                        categoryTextView.setTextColor(R.color.black);
 
-                    if (categoryKey != null && categoryText != null) {
-                        switch (categoryKey) {
-                            case "category1":
-                                categoryTextView1.setText(categoryText);
-                                break;
-                            case "category2":
-                                categoryTextView2.setText(categoryText);
-                                break;
-                            case "category3":
-                                categoryTextView3.setText(categoryText);
-                                break;
-                            // Add more cases for additional categories as needed
-                        }
+                        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                        );
+                        layoutParams.setMargins(0, 16, 0, 0); // Adjust the top margin as needed
+
+                        categoryTextView.setLayoutParams(layoutParams);
+                        dynamicCategoriesLayout.addView(categoryTextView);
+
+                        // Create RecyclerView for category
+                        RecyclerView categoryRecyclerView = new RecyclerView(getContext());
+                        categoryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+                        dynamicCategoriesLayout.addView(categoryRecyclerView);
+
+                        // Create list and adapter for category
+                        List<Course> categoryCourseList = new ArrayList<>();
+                        CourseAdapter categoryAdapter = new CourseAdapter(categoryCourseList);
+                        categoryAdapter.setOnItemClickListener(HomeFragment.this);
+                        categoryRecyclerView.setAdapter(categoryAdapter);
+
+                        // Fetch courses for the category
+                        DatabaseReference categoryDatabaseReference = firebaseDatabase.getReference("courses").child(categoryName);
+                        categoryDatabaseReference.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                categoryCourseList.clear();
+                                for (DataSnapshot courseSnapshot : dataSnapshot.getChildren()) {
+                                    Course course = courseSnapshot.getValue(Course.class);
+                                    if (course != null) {
+                                        categoryCourseList.add(course);
+                                    }
+                                }
+                                categoryAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // Handle errors
+                            }
+                        });
                     }
                 }
             }
@@ -207,10 +151,7 @@ public class HomeFragment extends Fragment implements CourseAdapter.OnItemClickL
                 // Handle errors
             }
         });
-
-        return view;
     }
-
 
     private void fetchSliderImages() {
         DatabaseReference sliderDatabaseReference = FirebaseDatabase.getInstance().getReference("slider_images");
