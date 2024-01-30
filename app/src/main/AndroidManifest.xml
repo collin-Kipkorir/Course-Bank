@@ -18,6 +18,7 @@
         <activity
             android:name=".AboutActivity"
             android:exported="false"
+            android:label="About Us"
             android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".CourseContentActivity"
