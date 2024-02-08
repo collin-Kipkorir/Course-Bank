@@ -3,11 +3,15 @@ package com.ai.courses.coursesbank;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class Course implements Parcelable {
+
     private String courseId;
     private String courseName;
     private String courseDescription;
     private String courseImageUrl;
+
 
     // Empty constructor (required for Firebase)
     public Course() {

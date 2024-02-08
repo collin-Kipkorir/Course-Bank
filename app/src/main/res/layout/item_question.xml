@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Question Text -->
+    <TextView
+        android:id="@+id/questionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:text="Question" />
+
+    <!-- Choices RadioGroup -->
+    <RadioGroup
+        android:id="@+id/choicesRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- RadioButton for Choice 1 -->
+        <RadioButton
+            android:id="@+id/choice1RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choice 1"
+            android:textSize="16sp" />
+
+        <!-- RadioButton for Choice 2 -->
+        <RadioButton
+            android:id="@+id/choice2RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choice 2"
+            android:textSize="16sp" />
+
+        <!-- RadioButton for Choice 3 -->
+        <RadioButton
+            android:id="@+id/choice3RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choice 3"
+            android:textSize="16sp" />
+
+        <!-- RadioButton for Choice 4 -->
+        <RadioButton
+            android:id="@+id/choice4RadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choice 4"
+            android:textSize="16sp" />
+
+    </RadioGroup>
+
+</LinearLayout>

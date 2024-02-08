@@ -3,29 +3,45 @@ package com.ai.courses.coursesbank;
 import java.util.List;
 
 public class Question {
-    private String text;
+    private String questionText;
     private List<String> choices;
-    private String correctAnswer;
+    private String correctChoice;
 
+    // Required empty constructor for Firebase
     public Question() {
-        // Default constructor required for Firebase
     }
 
-    public Question(String text, List<String> choices, String correctAnswer) {
-        this.text = text;
+    public Question(String questionText, List<String> choices, String correctChoice) {
+        this.questionText = questionText;
         this.choices = choices;
-        this.correctAnswer = correctAnswer;
+        this.correctChoice = correctChoice;
     }
 
-    public String getText() {
-        return text;
+    // Getter and setter for questionText
+    public String getQuestionText() {
+        return questionText;
     }
 
+    public void setQuestionText(String questionText) {
+        this.questionText = questionText;
+    }
+
+    // Getter and setter for choices
     public List<String> getChoices() {
         return choices;
     }
 
-    public String getCorrectAnswer() {
-        return correctAnswer;
+    public void setChoices(List<String> choices) {
+        this.choices = choices;
+    }
+
+    // Getter and setter for correctChoice
+    public String getCorrectChoice() {
+        return correctChoice;
+    }
+
+    public void setCorrectChoice(String correctChoice) {
+        this.correctChoice = correctChoice;
     }
 }
+
