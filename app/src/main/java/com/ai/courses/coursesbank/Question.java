@@ -5,16 +5,17 @@ import java.util.List;
 public class Question {
     private String questionText;
     private List<String> choices;
-    private String correctChoice;
+    private int correctChoiceIndex;
+    private int selectedChoiceIndex = -1; // Default value indicating no selection
 
     // Required empty constructor for Firebase
     public Question() {
     }
 
-    public Question(String questionText, List<String> choices, String correctChoice) {
+    public Question(String questionText, List<String> choices, int correctChoiceIndex) {
         this.questionText = questionText;
         this.choices = choices;
-        this.correctChoice = correctChoice;
+        this.correctChoiceIndex = correctChoiceIndex;
     }
 
     // Getter and setter for questionText
@@ -35,13 +36,21 @@ public class Question {
         this.choices = choices;
     }
 
-    // Getter and setter for correctChoice
-    public String getCorrectChoice() {
-        return correctChoice;
+    // Getter and setter for correctChoiceIndex
+    public int getCorrectChoiceIndex() {
+        return correctChoiceIndex;
     }
 
-    public void setCorrectChoice(String correctChoice) {
-        this.correctChoice = correctChoice;
+    public void setCorrectChoiceIndex(int correctChoiceIndex) {
+        this.correctChoiceIndex = correctChoiceIndex;
+    }
+
+    // Getter and setter for selectedChoiceIndex
+    public int getSelectedChoiceIndex() {
+        return selectedChoiceIndex;
+    }
+
+    public void setSelectedChoiceIndex(int selectedChoiceIndex) {
+        this.selectedChoiceIndex = selectedChoiceIndex;
     }
 }
-

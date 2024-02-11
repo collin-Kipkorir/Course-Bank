@@ -1,10 +1,12 @@
 package com.ai.courses.coursesbank;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +50,7 @@ public class AccountFragment extends Fragment {
         checkResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkResults(v);
+                checkResults();
             }
         });
 
@@ -64,7 +66,8 @@ public class AccountFragment extends Fragment {
                 for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
                     for (DataSnapshot questionSnapshot : categorySnapshot.getChildren()) {
                         String questionText = questionSnapshot.child("questionText").getValue(String.class);
-                        String correctChoice = questionSnapshot.child("correctChoice").getValue(String.class);
+                        Integer correctChoiceIndexObject = questionSnapshot.child("correctChoiceIndex").getValue(Integer.class);
+                        int correctChoiceIndex = correctChoiceIndexObject != null ? correctChoiceIndexObject.intValue() : -1; // Default value if null
                         List<String> choices = new ArrayList<>();
                         // Fetch choices from the "choices" node
                         DataSnapshot choicesSnapshot = questionSnapshot.child("choices");
@@ -73,7 +76,7 @@ public class AccountFragment extends Fragment {
                             choices.add(choice);
                         }
                         // Create a Question object with retrieved data
-                        Question question = new Question(questionText, choices, correctChoice);
+                        Question question = new Question(questionText, choices, correctChoiceIndex);
                         questionList.add(question);
                     }
                 }
@@ -87,9 +90,71 @@ public class AccountFragment extends Fragment {
         });
     }
 
-    // Method to check results when the button is clicked
-    public void checkResults(View view) {
-        // Implementation to check results...
+    public void checkResults() {
+        int totalQuestions = questionList.size();
+        int correctAnswers = 0;
+        boolean allQuestionsAnswered = true; // Flag to track if all questions have at least one option selected
+
+        // Reset error marking for all questions
+        for (int i = 0; i < totalQuestions; i++) {
+            resetRadioButtonColor(i);
+        }
+
+        for (int i = 0; i < totalQuestions; i++) {
+            Question question = questionList.get(i);
+            int selectedPosition = adapter.getSelectedPosition(i);
+            if (selectedPosition != RecyclerView.NO_POSITION) {
+                // Compare the selected position with the correct choice index
+                if (selectedPosition == question.getCorrectChoiceIndex()) {
+                    correctAnswers++;
+                }
+            } else {
+                // No option selected for this question
+                allQuestionsAnswered = false;
+
+                // Mark the RadioButton as an error
+                markRadioButtonAsError(i);
+            }
+        }
+
+        if (allQuestionsAnswered) {
+            // Calculate percentage
+            int percentage = (correctAnswers * 100) / totalQuestions;
+
+            // Display a success message with the score
+            String message = "Congratulations! You scored " + percentage + "%";
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        } else {
+            // Show a Toast indicating that all questions need to have at least one option selected
+            Toast.makeText(getContext(), "Please select an option for all questions.", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void markRadioButtonAsError(int position) {
+        // Get the ViewHolder for the specified position
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder instanceof QuestionAdapter.QuestionViewHolder) {
+            QuestionAdapter.QuestionViewHolder questionViewHolder = (QuestionAdapter.QuestionViewHolder) viewHolder;
+
+            // Set error state for the RadioButtons (change their text color to red)
+            questionViewHolder.choice1RadioButton.setTextColor(Color.RED);
+            questionViewHolder.choice2RadioButton.setTextColor(Color.RED);
+            questionViewHolder.choice3RadioButton.setTextColor(Color.RED);
+            questionViewHolder.choice4RadioButton.setTextColor(Color.RED);
+        }
+    }
+
+    private void resetRadioButtonColor(int position) {
+        // Get the ViewHolder for the specified position
+        RecyclerView.ViewHolder viewHolder = recyclerView.findViewHolderForAdapterPosition(position);
+        if (viewHolder instanceof QuestionAdapter.QuestionViewHolder) {
+            QuestionAdapter.QuestionViewHolder questionViewHolder = (QuestionAdapter.QuestionViewHolder) viewHolder;
+
+            // Reset text color for RadioButtons
+            questionViewHolder.choice1RadioButton.setTextColor(Color.BLACK);
+            questionViewHolder.choice2RadioButton.setTextColor(Color.BLACK);
+            questionViewHolder.choice3RadioButton.setTextColor(Color.BLACK);
+            questionViewHolder.choice4RadioButton.setTextColor(Color.BLACK);
+        }
     }
 }
-

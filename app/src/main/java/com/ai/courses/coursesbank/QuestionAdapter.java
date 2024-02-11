@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder> {
-
     private Context context;
     private List<Question> questionList;
 
@@ -34,14 +33,38 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
     public void onBindViewHolder(@NonNull QuestionViewHolder holder, int position) {
         Question question = questionList.get(position);
         holder.questionTextView.setText(question.getQuestionText());
+        List<String> choices = question.getChoices();
         // Set choices for RadioButton elements
-        holder.choice1RadioButton.setText(question.getChoices().get(0));
-        holder.choice2RadioButton.setText(question.getChoices().get(1));
-        holder.choice3RadioButton.setText(question.getChoices().get(2));
-        holder.choice4RadioButton.setText(question.getChoices().get(3));
+        holder.choice1RadioButton.setText(choices.get(0));
+        holder.choice2RadioButton.setText(choices.get(1));
+        holder.choice3RadioButton.setText(choices.get(2));
+        holder.choice4RadioButton.setText(choices.get(3));
+
+        // Update the selected state of RadioButtons based on selectedChoiceIndex
+        int selectedChoiceIndex = question.getSelectedChoiceIndex();
+        holder.choice1RadioButton.setChecked(selectedChoiceIndex == 0);
+        holder.choice2RadioButton.setChecked(selectedChoiceIndex == 1);
+        holder.choice3RadioButton.setChecked(selectedChoiceIndex == 2);
+        holder.choice4RadioButton.setChecked(selectedChoiceIndex == 3);
+
+        // Set onClickListener for RadioButtons
+        holder.choice1RadioButton.setOnClickListener(v -> {
+            question.setSelectedChoiceIndex(0);
+            notifyDataSetChanged(); // Update UI
+        });
+        holder.choice2RadioButton.setOnClickListener(v -> {
+            question.setSelectedChoiceIndex(1);
+            notifyDataSetChanged(); // Update UI
+        });
+        holder.choice3RadioButton.setOnClickListener(v -> {
+            question.setSelectedChoiceIndex(2);
+            notifyDataSetChanged(); // Update UI
+        });
+        holder.choice4RadioButton.setOnClickListener(v -> {
+            question.setSelectedChoiceIndex(3);
+            notifyDataSetChanged(); // Update UI
+        });
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -65,4 +88,11 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         }
     }
 
+    // Method to get the selected position for a given question
+    public int getSelectedPosition(int questionIndex) {
+        if (questionIndex >= 0 && questionIndex < questionList.size()) {
+            return questionList.get(questionIndex).getSelectedChoiceIndex();
+        }
+        return -1; // Return -1 if index is out of bounds
+    }
 }
