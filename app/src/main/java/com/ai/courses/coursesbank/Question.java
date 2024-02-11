@@ -3,6 +3,8 @@ package com.ai.courses.coursesbank;
 import java.util.List;
 
 public class Question {
+    private String category;
+    private boolean isCategoryHeader;
     private String questionText;
     private List<String> choices;
     private int correctChoiceIndex;
@@ -11,6 +13,7 @@ public class Question {
     public boolean isCorrectlyAnswered() {
         return selectedChoiceIndex == correctChoiceIndex;
     }
+
     // Required empty constructor for Firebase
     public Question() {
     }
@@ -19,8 +22,16 @@ public class Question {
         this.questionText = questionText;
         this.choices = choices;
         this.correctChoiceIndex = correctChoiceIndex;
+        this.isCategoryHeader = false;
+    }
+    // New getter and setter for category
+    public String getCategory() {
+        return category;
     }
 
+    public void setCategory(String category) {
+        this.category = category;
+    }
     // Getter and setter for questionText
     public String getQuestionText() {
         return questionText;
@@ -55,5 +66,13 @@ public class Question {
 
     public void setSelectedChoiceIndex(int selectedChoiceIndex) {
         this.selectedChoiceIndex = selectedChoiceIndex;
+    }
+    public Question(String category) {
+        this.category = category;
+        this.isCategoryHeader = true;
+    }
+
+    public boolean isCategoryHeader() {
+        return isCategoryHeader;
     }
 }

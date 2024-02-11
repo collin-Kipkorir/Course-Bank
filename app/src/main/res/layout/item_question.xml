@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="18sp"
+        android:textColor="#959494"
         android:textStyle="bold"
         android:text="Question" />
 
@@ -19,6 +20,7 @@
         android:id="@+id/choicesRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/grey"
         android:orientation="vertical">
 
         <!-- RadioButton for Choice 1 -->
@@ -27,7 +29,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choice 1"
-            android:textSize="16sp" />
+            android:shadowColor="@color/grey"
+            android:textColor="@color/black"
+            android:buttonTint="@color/grey"
+            android:textSize="15sp" />
 
         <!-- RadioButton for Choice 2 -->
         <RadioButton
@@ -35,7 +40,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choice 2"
-            android:textSize="16sp" />
+            android:textColor="@color/black"
+            android:buttonTint="@color/grey"
+            android:textSize="15sp" />
 
         <!-- RadioButton for Choice 3 -->
         <RadioButton
@@ -43,7 +50,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choice 3"
-            android:textSize="16sp" />
+            android:textColor="@color/black"
+            android:buttonTint="@color/grey"
+            android:textSize="15sp" />
 
         <!-- RadioButton for Choice 4 -->
         <RadioButton
@@ -51,7 +60,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Choice 4"
-            android:textSize="16sp" />
+            android:buttonTint="@color/grey"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
 
     </RadioGroup>
 

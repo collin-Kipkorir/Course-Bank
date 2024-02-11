@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
@@ -79,6 +80,7 @@ public class AccountFragment extends Fragment {
                         // Create a Question object with retrieved data
                         Question question = new Question(questionText, choices, correctChoiceIndex);
                         questionList.add(question);
+                        Collections.reverse(questionList);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -118,7 +120,7 @@ public class AccountFragment extends Fragment {
                 }
 
                 for (int i = 0; i < totalQuestions; i++) {
-                    Question question = questionList.get(i);
+                   // Question question = questionList.get(i);
                     int selectedPosition = adapter.getSelectedPosition(i);
                     int correctChoiceIndex = correctChoices.get(i); // Get correct choice index for current question
                     if (selectedPosition != RecyclerView.NO_POSITION) {
