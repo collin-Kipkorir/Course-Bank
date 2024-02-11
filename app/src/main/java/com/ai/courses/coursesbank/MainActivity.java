@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity {
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    drawerLayout.closeDrawers();
                     Fragment selectedFragment = null;
                     String title = ""; // Initialize title
 

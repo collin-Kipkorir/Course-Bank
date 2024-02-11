@@ -1,26 +1,29 @@
 package com.ai.courses.coursesbank;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.tabs.TabLayout;
 
 public class CourseContentActivity extends AppCompatActivity {
+    private WebView webView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_content);
+
         // Change the color of the status bar
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getWindow();
@@ -28,19 +31,13 @@ public class CourseContentActivity extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.primary));
         }
 
-        TabLayout tabLayout = findViewById(R.id.tabLayout);
-        ViewPager viewPager = findViewById(R.id.viewPager);
+        // Initialize WebView
+        webView = findViewById(R.id.notesWebView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true); // Enable JavaScript
 
-        // Set up ViewPager with the adapter
-        TabPagerAdapter pagerAdapter = new TabPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
-
-        // Connect TabLayout with ViewPager
-        tabLayout.setupWithViewPager(viewPager);
-
-        // Receive data from the clicked item
+        // Retrieve clicked course from Intent
         Course clickedCourse = getIntent().getParcelableExtra("clicked_course");
-
 
         if (clickedCourse != null) {
             setTitle(clickedCourse.getCourseName());
@@ -56,41 +53,20 @@ public class CourseContentActivity extends AppCompatActivity {
 
             nameTextView.setText(clickedCourse.getCourseName());
 
-            // Set up ViewPager with the adapter
-            setCourseContent(viewPager, clickedCourse);
-
-            // Set up TabLayout with ViewPager
-            tabLayout.setupWithViewPager(viewPager);
-
-            // Set the default selected tab (Notes)
-            tabLayout.getTabAt(0).select();
-
-            // Load the content of the default selected tab (Notes)
-            loadFragmentContent(0, clickedCourse);
+            // Display course content in WebView
+            displayCourseContent(clickedCourse.getCourseDescription());
+        } else {
+            Toast.makeText(this, "No course data found", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void setCourseContent(ViewPager viewPager, Course clickedCourse) {
-        TabPagerAdapter adapter = new TabPagerAdapter(getSupportFragmentManager());
-
-        // Pass the course description to NotesFragment and courseId to QuestionsFragment
-        NotesFragment notesFragment = NotesFragment.newInstance(clickedCourse.getCourseDescription());
-        QuestionsFragment questionsFragment = QuestionsFragment.newInstance(clickedCourse.getCourseId());
-
-        adapter.addFragment(notesFragment, "Notes");
-        adapter.addFragment(questionsFragment, "Questions");
-        viewPager.setAdapter(adapter);
-    }
-
-    private void loadFragmentContent(int position, Course clickedCourse) {
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag("android:switcher:" + R.id.viewPager + ":" + position);
-
-        if (fragment != null) {
-            if (position == 0 && fragment instanceof NotesFragment) {
-                ((NotesFragment) fragment).displayCourseContent(clickedCourse.getCourseDescription());
-            } else if (position == 1 && fragment instanceof QuestionsFragment) {
-                ((QuestionsFragment) fragment).displayQuestionsContent(clickedCourse.getCourseId());
-            }
+    // Public method to set and display course content
+    public void displayCourseContent(String content) {
+        if (webView != null) {
+            // Load course content into WebView
+            webView.loadData(content, "text/html", "utf-8");
+        } else {
+            Toast.makeText(this, "WebView is null", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,6 +1,5 @@
 package com.ai.courses.coursesbank;
 
-import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,7 +70,6 @@ public class AccountFragment extends Fragment {
         clearCache();
         DatabaseReference questionsRef = FirebaseDatabase.getInstance().getReference().child("questions");
         questionsRef.addValueEventListener(new ValueEventListener() {
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 questionList.clear();
