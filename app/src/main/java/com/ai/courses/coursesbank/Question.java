@@ -7,7 +7,10 @@ public class Question {
     private List<String> choices;
     private int correctChoiceIndex;
     private int selectedChoiceIndex = -1; // Default value indicating no selection
-
+    // Method to check if the selected choice matches the correct choice index
+    public boolean isCorrectlyAnswered() {
+        return selectedChoiceIndex == correctChoiceIndex;
+    }
     // Required empty constructor for Firebase
     public Question() {
     }

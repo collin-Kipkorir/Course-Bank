@@ -2,6 +2,7 @@ package com.ai.courses.coursesbank;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,45 +90,73 @@ public class AccountFragment extends Fragment {
             }
         });
     }
-
     public void checkResults() {
-        int totalQuestions = questionList.size();
-        int correctAnswers = 0;
-        boolean allQuestionsAnswered = true; // Flag to track if all questions have at least one option selected
-
-        // Reset error marking for all questions
-        for (int i = 0; i < totalQuestions; i++) {
-            resetRadioButtonColor(i);
-        }
-
-        for (int i = 0; i < totalQuestions; i++) {
-            Question question = questionList.get(i);
-            int selectedPosition = adapter.getSelectedPosition(i);
-            if (selectedPosition != RecyclerView.NO_POSITION) {
-                // Compare the selected position with the correct choice index
-                if (selectedPosition == question.getCorrectChoiceIndex()) {
-                    correctAnswers++;
+        DatabaseReference questionsRef = FirebaseDatabase.getInstance().getReference().child("questions");
+        questionsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Retrieve correct choices from Firebase
+                List<Integer> correctChoices = new ArrayList<>();
+                for (DataSnapshot categorySnapshot : dataSnapshot.getChildren()) {
+                    for (DataSnapshot questionSnapshot : categorySnapshot.getChildren()) {
+                        Integer correctChoiceIndexObject = questionSnapshot.child("correctChoiceIndex").getValue(Integer.class);
+                        if (correctChoiceIndexObject != null) {
+                            correctChoices.add(correctChoiceIndexObject);
+                        } else {
+                            correctChoices.add(-1); // Add a default value if correct choice index is not available
+                        }
+                    }
                 }
-            } else {
-                // No option selected for this question
-                allQuestionsAnswered = false;
 
-                // Mark the RadioButton as an error
-                markRadioButtonAsError(i);
+                int totalQuestions = questionList.size();
+                int correctAnswers = 0;
+                boolean allQuestionsAnswered = true; // Flag to track if all questions have at least one option selected
+
+                // Reset error marking for all questions
+                for (int i = 0; i < totalQuestions; i++) {
+                    resetRadioButtonColor(i);
+                }
+
+                for (int i = 0; i < totalQuestions; i++) {
+                    Question question = questionList.get(i);
+                    int selectedPosition = adapter.getSelectedPosition(i);
+                    int correctChoiceIndex = correctChoices.get(i); // Get correct choice index for current question
+                    if (selectedPosition != RecyclerView.NO_POSITION) {
+                        // Compare the selected position with the correct choice index
+                        if (correctChoiceIndex != -1 && selectedPosition == correctChoiceIndex) { // Check if correctChoiceIndex is valid
+                            correctAnswers++;
+                        }
+                    } else {
+                        // No option selected for this question
+                        allQuestionsAnswered = false;
+
+                        // Mark the RadioButton as an error
+                        markRadioButtonAsError(i);
+                    }
+                }
+
+                // Debug logging
+                Log.d("CheckResults", "Correct Choices: " + correctChoices);
+                Log.d("CheckResults", "Correct Answers: " + correctAnswers);
+
+                if (allQuestionsAnswered) {
+                    // Calculate percentage
+                    int percentage = (correctAnswers * 100) / totalQuestions;
+
+                    // Display a success message with the score
+                    String message = "Congratulations! You scored " + percentage + "%";
+                    Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                } else {
+                    // Show a Toast indicating that all questions need to have at least one option selected
+                    Toast.makeText(getContext(), "Please select an option for all questions.", Toast.LENGTH_LONG).show();
+                }
             }
-        }
 
-        if (allQuestionsAnswered) {
-            // Calculate percentage
-            int percentage = (correctAnswers * 100) / totalQuestions;
-
-            // Display a success message with the score
-            String message = "Congratulations! You scored " + percentage + "%";
-            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        } else {
-            // Show a Toast indicating that all questions need to have at least one option selected
-            Toast.makeText(getContext(), "Please select an option for all questions.", Toast.LENGTH_LONG).show();
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle database error
+            }
+        });
     }
 
     private void markRadioButtonAsError(int position) {
