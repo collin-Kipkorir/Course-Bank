@@ -1,5 +1,6 @@
 package com.ai.courses.coursesbank;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,7 +11,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
@@ -49,12 +48,7 @@ public class AccountFragment extends Fragment {
         retrieveQuestions();
         checkResultsButton.setVisibility(View.GONE);
         // Set OnClickListener for the checkResultsButton
-        checkResultsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkResults();
-            }
-        });
+        checkResultsButton.setOnClickListener(v -> checkResults());
 // Clear cache before retrieving questions
         clearCache();
         return view;
@@ -77,6 +71,7 @@ public class AccountFragment extends Fragment {
         clearCache();
         DatabaseReference questionsRef = FirebaseDatabase.getInstance().getReference().child("questions");
         questionsRef.addValueEventListener(new ValueEventListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 questionList.clear();
@@ -84,7 +79,7 @@ public class AccountFragment extends Fragment {
                     for (DataSnapshot questionSnapshot : categorySnapshot.getChildren()) {
                         String questionText = questionSnapshot.child("questionText").getValue(String.class);
                         Integer correctChoiceIndexObject = questionSnapshot.child("correctChoiceIndex").getValue(Integer.class);
-                        int correctChoiceIndex = correctChoiceIndexObject != null ? correctChoiceIndexObject.intValue() : -1; // Default value if null
+                        int correctChoiceIndex = correctChoiceIndexObject != null ? correctChoiceIndexObject : -1; // Default value if null
                         List<String> choices = new ArrayList<>();
                         // Fetch choices from the "choices" node
                         DataSnapshot choicesSnapshot = questionSnapshot.child("choices");
