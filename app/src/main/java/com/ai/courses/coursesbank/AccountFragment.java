@@ -98,7 +98,7 @@ public class AccountFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle database error
+                // Handle database erro
             }
         });
     }
