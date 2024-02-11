@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AccountFragment extends Fragment {
@@ -46,7 +47,7 @@ public class AccountFragment extends Fragment {
         adapter = new QuestionAdapter(getContext(), questionList); // Pass context here
         recyclerView.setAdapter(adapter);
         retrieveQuestions();
-
+        checkResultsButton.setVisibility(View.GONE);
         // Set OnClickListener for the checkResultsButton
         checkResultsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,11 +55,26 @@ public class AccountFragment extends Fragment {
                 checkResults();
             }
         });
-
+// Clear cache before retrieving questions
+        clearCache();
         return view;
+    }
+    private void clearCache() {
+        // Get the Firebase database instance
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+
+        // Clear the persistence cache
+        try {
+            firebaseDatabase.setPersistenceEnabled(false);
+            firebaseDatabase.setPersistenceEnabled(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void retrieveQuestions() {
+// Clear cache before retrieving questions
+        clearCache();
         DatabaseReference questionsRef = FirebaseDatabase.getInstance().getReference().child("questions");
         questionsRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -79,6 +95,7 @@ public class AccountFragment extends Fragment {
                         // Create a Question object with retrieved data
                         Question question = new Question(questionText, choices, correctChoiceIndex);
                         questionList.add(question);
+                        checkResultsButton.setVisibility(View.VISIBLE);
                     }
                 }
                 adapter.notifyDataSetChanged();
@@ -118,7 +135,7 @@ public class AccountFragment extends Fragment {
                 }
 
                 for (int i = 0; i < totalQuestions; i++) {
-                    Question question = questionList.get(i);
+                   // Question question = questionList.get(i);
                     int selectedPosition = adapter.getSelectedPosition(i);
                     int correctChoiceIndex = correctChoices.get(i); // Get correct choice index for current question
                     if (selectedPosition != RecyclerView.NO_POSITION) {

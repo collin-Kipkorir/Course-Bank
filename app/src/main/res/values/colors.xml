@@ -5,4 +5,5 @@
     <color name="bgr">#C7F4C7</color>
     <color name="primary">#637A9F</color>
     <color name="lwhite">#F1F1F1</color>
+    <color name="grey">#464343</color>
 </resources>

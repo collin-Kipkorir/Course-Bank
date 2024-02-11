@@ -56,6 +56,9 @@ public class MainActivity extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.primary));
         }
 
+        // Set default title to "Home"
+        setActionBarTitle("Courses");
+
 
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -73,9 +76,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 // Handle item clicks here
+                Fragment selectedFragment = null;
                 int itemId = item.getItemId();
                 if (itemId == R.id.nav_item1) {
                     // Handle item 1 click
+                    selectedFragment = new HomeFragment();
 
                 } else if (itemId == R.id.nav_item2) {
                     // Handle item 2 click
@@ -123,7 +128,11 @@ public class MainActivity extends AppCompatActivity {
 
                 // Close the drawer after handling item click
                 drawerLayout.closeDrawers();
-
+                if (selectedFragment != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, selectedFragment)
+                            .commit();
+                }
                 return true;
             }
         });
@@ -134,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
             showPrivacyDialog();
         }
     }
+
     private void sendFeedbackEmail() {
         String[] recipients = {"colloflix@gmail.com"};
         String subject = "Online Courses Feedback";
@@ -242,22 +252,35 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                     Fragment selectedFragment = null;
+                    String title = ""; // Initialize title
 
                     if (item.getItemId() == R.id.action_home) {
                         selectedFragment = new HomeFragment();
+                        title = "Courses"; // Set title for HomeFragment
                     } else if (item.getItemId() == R.id.action_account) {
                         selectedFragment = new AccountFragment();
+                        title = "Challenges"; // Set title for AccountFragment
                     } else if (item.getItemId() == R.id.action_notifications) {
                         selectedFragment = new NotificationsFragment();
+                        title = "Account"; // Set title for NotificationsFragment
                     }
 
                     if (selectedFragment != null) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.fragment_container, selectedFragment)
                                 .commit();
+                        setActionBarTitle(title); // Update ActionBar title
                     }
 
                     return true;
                 }
             };
+
+    private void setActionBarTitle(String title) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(title); // Set ActionBar title
+        }
+    }
+
 }
