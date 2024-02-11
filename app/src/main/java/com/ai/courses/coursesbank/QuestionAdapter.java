@@ -93,6 +93,6 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionAdapter.Questi
         if (questionIndex >= 0 && questionIndex < questionList.size()) {
             return questionList.get(questionIndex).getSelectedChoiceIndex();
         }
-        return -1; // Return -1 if index is out of bounds
+        return -1;
     }
 }
