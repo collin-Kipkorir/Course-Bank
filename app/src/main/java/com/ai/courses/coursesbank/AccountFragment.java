@@ -137,7 +137,7 @@ public class AccountFragment extends Fragment {
                 for (int i = 0; i < totalQuestions; i++) {
                    // Question question = questionList.get(i);
                     int selectedPosition = adapter.getSelectedPosition(i);
-                    int correctChoiceIndex = correctChoices.get(i); // Get correct choice index for current question
+                    int correctChoiceIndex = correctChoices.get(i);
                     if (selectedPosition != RecyclerView.NO_POSITION) {
                         // Compare the selected position with the correct choice index
                         if (correctChoiceIndex != -1 && selectedPosition == correctChoiceIndex) { // Check if correctChoiceIndex is valid
