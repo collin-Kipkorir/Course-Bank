@@ -10,5 +10,8 @@
         <item name="android:textColor">@color/primary</item>
         <!-- Add other style attributes if needed -->
     </style>
+    <style name="AppTheme.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 
 </resources>
