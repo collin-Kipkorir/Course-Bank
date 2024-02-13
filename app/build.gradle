@@ -34,7 +34,7 @@ android {
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.github.smarteist:autoimageslider:1.4.0-appcompat'
+    implementation 'com.github.smarteist:autoimageslider:1.4.0'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'com.google.firebase:firebase-database:20.3.0'
@@ -66,4 +66,8 @@ dependencies {
     //Lottie
     def lottieVersion = "3.6.0" //Version of lottie we are using
     implementation "com.airbnb.android:lottie:$lottieVersion"
+
+    //Intro Slider
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+
 }
