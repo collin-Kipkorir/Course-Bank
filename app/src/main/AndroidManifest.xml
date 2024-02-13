@@ -16,6 +16,9 @@
         android:theme="@style/Theme.CoursesBank"
         tools:targetApi="31">
         <activity
+            android:name=".IntroActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
@@ -29,8 +32,8 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/AppTheme.FullScreen"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme.FullScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
